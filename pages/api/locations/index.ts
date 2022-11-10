@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next';
-import { bigcommerceClient, getSession } from '../../../lib/auth';
 
 /*  node-bigcommerce throws an error if response bodies include an
     'errors' property (https://github.com/getconversio/node-bigcommerce/blob/40b9fb2d948ff0fa2f19d31fbf872754fb6cfe35/lib/request.js#L24-L28)
@@ -8,22 +7,30 @@ import { bigcommerceClient, getSession } from '../../../lib/auth';
     I don't want to monkey patch it here, so I'm going to use axios instead
 */
 
-export default async function segments(req: NextApiRequest, res: NextApiResponse) {
+export default async function locations(req: NextApiRequest, res: NextApiResponse) {
     const {
         body,
-        query: { 'id:in': id, page, limit },
+        query: { 'id:in': id },
         method,
     } = req;
 
     switch (method) {
         case 'GET': {
             try {
-                const { accessToken, storeHash } = await getSession(req);
-                const bigcommerce = bigcommerceClient(accessToken, storeHash);
+                // const bigcommerce = bigcommerceClient("qdibs2s4yltabbkwk52o3ap7y07opee", "bwfbjat0gu");
+                const { data } = await axios({
+                    method: 'GET',
+                    url: `https://api.bigcommerce.com/stores/bwfbjat0gu/v3/inventory/locations`,
+                    headers: {
+                        'X-Auth-Token': "qdibs2s4yltabbkwk52o3ap7y07opee",
+                        'Content-Type': "application/json"
+                    }
+                })
 
-                const bcRes = await bigcommerce.get(`/segments?limit=${limit ? limit : '250'}${page ? `&page=${page}` : ''}${id ? `&id:in=${id}` : ''}`);
-                res.status(200).json(bcRes);
+                res.status(200).json(data)
+
             } catch (error) {
+
                 const { message, response } = error;
                 res.status(response?.status || 500).json({ message });
             }
@@ -31,13 +38,13 @@ export default async function segments(req: NextApiRequest, res: NextApiResponse
         }
         case 'PUT': {
             try {
-                const { accessToken, storeHash } = await getSession(req);
+                // const { accessToken, storeHash } = await getSession(req);
                 const { data } = await axios({
                     method: 'PUT',
-                    url: `https://api.bigcommerce.com/stores/${storeHash}/v3/segments`,
+                    url: `https://api.bigcommerce.com/stores/bwfbjat0gu/v3/inventory/locations`,
                     data: body,
                     headers: {
-                        'X-Auth-Token': accessToken,
+                        'X-Auth-Token': "qdibs2s4yltabbkwk52o3ap7y07opee",
                         'Content-Type': "application/json"
                     }
                 })
@@ -51,13 +58,13 @@ export default async function segments(req: NextApiRequest, res: NextApiResponse
         }
         case 'POST': {
             try {
-                const { accessToken, storeHash } = await getSession(req);
+                // const { accessToken, storeHash } = await getSession(req);
                 const { data } = await axios({
                     method: 'POST',
-                    url: `https://api.bigcommerce.com/stores/${storeHash}/v3/segments`,
+                    url: `https://api.bigcommerce.com/stores/bwfbjat0gu/v3/inventory/locations`,
                     data: body,
                     headers: {
-                        'X-Auth-Token': accessToken,
+                        'X-Auth-Token': "qdibs2s4yltabbkwk52o3ap7y07opee",
                         'Content-Type': "application/json"
                     }
                 })
@@ -70,12 +77,12 @@ export default async function segments(req: NextApiRequest, res: NextApiResponse
             break;
         }
         case 'DELETE': {
-            const { accessToken, storeHash } = await getSession(req);
+            // const { accessToken, storeHash } = await getSession(req);
             const { data } = await axios({
                 method: 'DELETE',
-                url: `https://api.bigcommerce.com/stores/${storeHash}/v3/segments?id:in=${id}`,
+                url: `https://api.bigcommerce.com/stores/bwfbjat0gu/v3/inventory/locations?id:in=${id}`,
                 headers: {
-                    'X-Auth-Token': accessToken,
+                    'X-Auth-Token': "qdibs2s4yltabbkwk52o3ap7y07opee",
                     'Content-Type': "application/json"
                 }
             })

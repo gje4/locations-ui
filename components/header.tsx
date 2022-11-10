@@ -26,13 +26,13 @@ const Header = () => {
     }, [pathname]);
 
     useEffect(() => {
-        // Prefetch segments page to reduce latency (doesn't prefetch in dev)
+        // Prefetch locations page to reduce latency (doesn't prefetch in dev)
         router.prefetch('/');
     });
 
     const items = [
-        { id: TabIds.SEGMENTS, title: 'Segments' },
-        { id: TabIds.CUSTOMERS, title: 'Customers' },
+        { id: TabIds.SEGMENTS, title: 'Locations' },
+        // { id: TabIds.CUSTOMERS, title: 'Customers' },
     ];
 
     const handleTabClick = (tabId: string) => {

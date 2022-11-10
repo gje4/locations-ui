@@ -10,12 +10,90 @@ const CreateSegment = ({
     addAlert
 }) => {
 
-    const handleClick = async ({ name, description }) => {
+    const handleClick = async ({ label, description, mondayOpenHr, mondayCloseHr, mondayOpen,
+                                   TuesdayOpenHr,TuesdayCloseHr,TuesdayOpen,WedOpenHr,WedCloseHr,WedOpen,
+                                   ThuOpenHr,ThuCloseHr,ThuOpen,FriOpenHr,FriCloseHr,FriOpen,SatOpenHr,SatCloseHr,SatOpen,
+                                   SunOpenHr,SunCloseHr,SunOpen, address1,address2,city,state,zipcode,email,phone,country
+                               }) => {
+
+        const operatingHours = {
+            "monday":  {
+                "open": mondayOpen,
+               "opening": mondayOpenHr,
+               "closing": mondayCloseHr,
+            },
+                "tuesday":  {
+                    "open": TuesdayOpen,
+                    "opening": TuesdayOpenHr,
+                    "closing": TuesdayCloseHr,
+                },
+                "wednesday":  {
+                    "open": WedOpen,
+                    "opening": WedOpenHr,
+                    "closing": WedCloseHr,
+                },
+                "thursday":  {
+                    "open": ThuOpen,
+                    "opening": ThuOpenHr,
+                    "closing": ThuCloseHr,
+                },
+                "friday":  {
+                    "open": FriOpen,
+                    "opening": FriOpenHr,
+                    "closing": FriCloseHr,
+                },
+                "saturday":  {
+                    "open": SatOpen,
+                    "opening": SatOpenHr,
+                    "closing": SatCloseHr,
+                },
+                "sunday":  {
+                    "open": SunOpen,
+                    "opening": SunOpenHr,
+                    "closing": SunCloseHr,
+                }
+        }
+
+        const address = {
+                address1: address1,
+                address2: address2,
+                city: city,
+                zip:zipcode,
+                state: state,
+                phone: phone,
+                email: email,
+            geo_coordinates: {
+                "latitude": 40.774378,
+                "longitude": -73.9653178
+            },
+            country_code:country,
+
+        }
+
+
+
+
         try {
             const body = JSON.stringify([
                 {
-                    name,
+                    label,
                     description,
+                    operatingHours,
+                    address,
+                    managed_by_external_source: true,
+                    storefront_visibility: true,
+                    type_id: "PHYSICAL",
+                    time_zone: "Etc/UTC",
+                    special_hours: [
+                        {
+                            "closing": "09:00",
+                            "date": "2022-09-29",
+                            "label": "Thanksgiving",
+                            "open": true,
+                            "opening": "09:00"
+                        }
+                    ],
+                    enabled: true
                 }
             ]),
                 options = {
@@ -25,7 +103,8 @@ const CreateSegment = ({
                         "content-type": "application/json"
                     }
                 },
-                url = `/api/segments?context=${encodedContext}`
+                // url = `/api/locations?context=${encodedContext}`
+                url = `/api/locations`
 
             const res = await fetch(url, options)
             const data = await res.json()
@@ -37,7 +116,7 @@ const CreateSegment = ({
                 autoDismiss: true,
                 messages: [
                     {
-                        text: `Created segment: ${name}`
+                        text: `Created location: ${label}`
                     }
                 ],
                 type: 'success',
@@ -64,12 +143,12 @@ const CreateSegment = ({
 
     return <Box marginTop="large">
         <AlertsManager manager={alertsManager} />
-        <H2>Create a Segment</H2>
+        <H2>Create a Location</H2>
         <SegmentEditor
             onSave={handleClick}
             onCancel={onCancel}
-            saveText="Save Segment"
-            segment={{ name: "", description: "" }}
+            saveText="Save Location"
+            segment={{ label: "", description: "" }}
         />
     </Box>
 }

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next';
-import { bigcommerceClient, getSession } from '../../../lib/auth';
+import { bigcommerceClient } from '../../../lib/auth';
 
     /*  node-bigcommerce throws an error if response bodies include an
         'errors' property (https://github.com/getconversio/node-bigcommerce/blob/40b9fb2d948ff0fa2f19d31fbf872754fb6cfe35/lib/request.js#L24-L28)
@@ -18,8 +18,8 @@ export default async function shopperProfiles(req: NextApiRequest, res: NextApiR
     switch (method) {
         case 'GET':
             try {
-                const { accessToken, storeHash } = await getSession(req);
-                const bigcommerce = bigcommerceClient(accessToken, storeHash);
+                // const { accessToken, storeHash } = await getSession(req);
+                const bigcommerce = bigcommerceClient("9hkojnpxgr74wo2p6hzq8z0top7kxtp", "bwfbjat0gu");
 
                 const bcRes = await bigcommerce.get(`/shopper-profiles?limit=${limit ? limit : '250'}${page ? `&page=${page}` : ''}`);
                 res.status(200).json(bcRes);
@@ -30,13 +30,13 @@ export default async function shopperProfiles(req: NextApiRequest, res: NextApiR
             break;
         case 'POST':
             try {
-                const { accessToken, storeHash } = await getSession(req);
+                // const { accessToken, storeHash } = await getSession(req);
                 const { data } =  await axios({
                     method: 'POST',
-                    url: `https://api.bigcommerce.com/stores/${storeHash}/v3/shopper-profiles`,
+                    url: `https://api.bigcommerce.com/stores/bwfbjat0gu/v3/shopper-profiles`,
                     data: body,
                     headers: {
-                        'X-Auth-Token': accessToken,
+                        'X-Auth-Token': "9hkojnpxgr74wo2p6hzq8z0top7kxtp",
                         'Content-Type': "application/json"
                     }
                 })

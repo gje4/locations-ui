@@ -43,7 +43,7 @@ const Segments = () => {
     const handleDeleteSegment = async (): Promise<void> => {
         setDeleting(true)
         try {
-            const url = `/api/segments?id:in=${segmentToDelete.id}&context=${encodedContext}`
+            const url = `/api/locations?id:in=${segmentToDelete.id}`
             const res = await fetch(url, {
                 method: 'DELETE'
             })
@@ -84,15 +84,17 @@ const Segments = () => {
         setDeleting(false)
     }
 
-    const segmentItems: SegmentTableItem[] = segments?.map(({ id, name }: Segment) => (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const segmentItems: SegmentTableItem[] = segments?.map(({ id, label }: Segment) => (
         {
             id,
-            name
+            label
         }
     ))
 
     const renderName = (id: string, name: string): ReactElement => (
-        <Link href={`/segments/${id}`}>
+        <Link href={`/locations/${id}`}>
             <StyledLink>{name}</StyledLink>
         </Link>
     )
@@ -100,8 +102,8 @@ const Segments = () => {
     const renderAction = (id: string, name: string): ReactElement => (
         <Dropdown
             items={[
-                { content: 'Edit Segment', onItemClick: () => router.push(`/segments/${id}`), hash: 'edit', icon: <EditIcon /> },
-                { content: 'Delete Segment', onItemClick: () => setSegmentToDelete({ id, name } as Segment), hash: 'delete', icon: <DeleteIcon /> }
+                { content: 'Edit Location', onItemClick: () => router.push(`/locations/${id}`), hash: 'edit', icon: <EditIcon /> },
+                { content: 'Delete Location', onItemClick: () => setSegmentToDelete({ id, name } as Segment), hash: 'delete', icon: <DeleteIcon /> }
             ]}
             toggle={<Button iconOnly={<MoreHorizIcon color="secondary60" />} variant="subtle" />}
         />
@@ -109,15 +111,19 @@ const Segments = () => {
 
     return segmentItems
         ? <Panel>
-            <H2>Segments</H2>
+            <H2>Locations</H2>
             <AlertsManager manager={alertsManager} />
             <Table
                 columns={[
-                    { header: 'Segment name', hash: 'name', render: ({ id, name }) => renderName(id, name), isSortable: true },
-                    { header: 'Action', hideHeader: true, hash: 'id', render: ({ id, name }) => renderAction(id, name) },
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    { header: 'Location name', hash: 'name', render: ({ id, label }) => renderName(id, label), isSortable: true },
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    { header: 'Action', hideHeader: true, hash: 'id', render: ({ id, label }) => renderAction(id, label) },
                 ]}
                 items={segmentItems ? segmentItems : []}
-                itemName="Segments"
+                itemName="Locations"
                 stickyHeader
             />
             {adding
@@ -127,7 +133,7 @@ const Segments = () => {
                     mutateSegments={mutateSegments}
                     addAlert={alertsManager.add}
                 />
-                : <Button marginTop="medium" iconLeft={<AddIcon />} onClick={() => setAdding(true)}>Add New Segment</Button>
+                : <Button marginTop="medium" iconLeft={<AddIcon />} onClick={() => setAdding(true)}>Add New Location</Button>
             }
             <Modal
                 isOpen={segmentToDelete ? true : false}

@@ -98,7 +98,7 @@ export function useSegments(query?: QueryParams) {
     const params = new URLSearchParams({ ...query, context }).toString();
 
     // Use an array to send multiple arguments to fetcher
-    const { data, error, mutate: mutateSegments } = useSWR(context ? ['/api/segments', params] : null, fetcher);
+    const { data, error, mutate: mutateSegments } = useSWR(context ? ['/api/locations', params] : null, fetcher);
     
     return {
         segments: data?.data,

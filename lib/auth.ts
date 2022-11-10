@@ -25,9 +25,9 @@ const bigcommerceSigned = new BigCommerce({
 
 export function bigcommerceClient(accessToken: string, storeHash: string, apiVersion = 'v3') {
     return new BigCommerce({
-        clientId: CLIENT_ID,
-        accessToken,
-        storeHash,
+        clientId: "gy4hxtva8cvq5m4qru9pkl98n4o53s9",
+        accessToken: "qdibs2s4yltabbkwk52o3ap7y07opee",
+        storeHash:"bwfbjat0gu",
         responseType: 'json',
         apiVersion,
     });
